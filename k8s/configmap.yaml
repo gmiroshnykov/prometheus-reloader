@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: prometheus
+
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 20s
+
+    rule_files:
+      - '*.rules.yml'
+
+  prometheus.rules.yml: |
+    groups:
+      - name: example
+        rules:
+        - record: current_targets
+          expr: count(up)
