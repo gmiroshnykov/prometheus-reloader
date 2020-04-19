@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"time"
 
-	promconfig "github.com/prometheus/prometheus/config"
+	"github.com/laggyluke/prometheus-reloader/pkg/prometheus"
 	"k8s.io/klog"
 )
 
@@ -83,7 +83,7 @@ func (r *Reloader) apply(ctx context.Context) error {
 	klog.V(4).Infof("configHash: %x", configHash)
 
 	// Load and parse Prometheus config
-	config, err := promconfig.Load(string(configFileContents))
+	config, err := prometheus.LoadConfig(configFileContents)
 	if err != nil {
 		return fmt.Errorf("failed to read Prometheus config: %w", err)
 	}
@@ -151,7 +151,7 @@ func (r *Reloader) triggerReload(ctx context.Context) error {
 	return nil
 }
 
-func getRuleFiles(config *promconfig.Config, configDir string) ([]string, error) {
+func getRuleFiles(config *prometheus.Config, configDir string) ([]string, error) {
 	var ruleFiles []string
 
 	for _, rf := range config.RuleFiles {
